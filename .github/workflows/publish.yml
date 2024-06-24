@@ -1,0 +1,39 @@
+name: Generate & Publish
+
+on: [push, workflow_dispatch]
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        path: 'in'
+    - uses: actions/checkout@v4
+      with:
+        repository: 'nek/git-blog'
+        sparse-checkout: |
+          git-blog.bb
+          styles.css
+        sparse-checkout-cone-mode: false
+        path: 'bb'
+    - name: Install babashka
+      run: |
+        curl -sLO https://raw.githubusercontent.com/babashka/babashka/master/install
+        chmod +x install
+        ./install
+        mkdir -p ./docs
+        ./bb/git-blog.bb ./in ./docs
+        cp bb/styles.css ./docs/styles.css
+    - name: Publish
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.BLOG_REPO_TOKEN }}
+      with:
+        source_file: docs
+        destination_repo: 'nek/log'
+        user_name: 'nek'
+        destination-branch: 'main'
+        user_email: 'nikdudnik@gmail.com'
+        commit_message: 'Update blog'
