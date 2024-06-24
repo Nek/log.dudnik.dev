@@ -1,3 +1,5 @@
 Name is Nikita Dudnik.
 I'm just logging stuff!
 Topics are diverse.
+
+Powered by Clojure Babashka, Gemini Text and Git Log as DB.
