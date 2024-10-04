@@ -6,37 +6,37 @@ jobs:
   generate-and-publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        path: 'in'
-    - uses: actions/checkout@v4
-      with:
-        repository: 'nek/git-blog'
-        sparse-checkout: |
-          git-blog.bb
-          styles.css
-        sparse-checkout-cone-mode: false
-        path: 'bb'
-    - name: Install jc
-      run: |
-        pip3 install jc
-    - name: Install Babashka
-      run: |
-        curl -sLO https://raw.githubusercontent.com/babashka/babashka/master/install
-        chmod +x install
-        ./install
-        mkdir -p ./docs
-        ./bb/git-blog.bb ./in ./docs styles.css
-        cp ./bb/styles.css ./docs/styles.css
-    - name: Publish
-      uses: dmnemec/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.BLOG_REPO_TOKEN }}
-      with:
-        source_file: docs
-        destination_repo: 'Nek/log'
-        user_name: 'Nek'
-        destination-branch: 'main'
-        user_email: 'nikdudnik@gmail.com'
-        commit_message: 'Update blog'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: "in"
+      - uses: actions/checkout@v4
+        with:
+          repository: "nek/git-blog"
+          sparse-checkout: |
+            git-blog.bb
+            styles.css
+          sparse-checkout-cone-mode: false
+          path: "bb"
+      - name: Install jc
+        run: |
+          pipx install jc
+      - name: Install Babashka
+        run: |
+          curl -sLO https://raw.githubusercontent.com/babashka/babashka/master/install
+          chmod +x install
+          ./install
+          mkdir -p ./docs
+          ./bb/git-blog.bb ./in ./docs styles.css
+          cp ./bb/styles.css ./docs/styles.css
+      - name: Publish
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.BLOG_REPO_TOKEN }}
+        with:
+          source_file: docs
+          destination_repo: "Nek/log"
+          user_name: "Nek"
+          destination-branch: "main"
+          user_email: "nikdudnik@gmail.com"
+          commit_message: "Update blog"
